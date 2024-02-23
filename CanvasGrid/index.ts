@@ -143,6 +143,7 @@ export class CanvasGrid implements ComponentFramework.StandardControl<IInputs, I
             React.createElement(Grid, {
                 width: allocatedWidth,
                 height: allocatedHeight,
+                gridHeight: this.context.parameters.GridHeight.raw,
                 columns: dataset.columns,
                 records: this.records,
                 sortedRecordIds: this.sortedRecordsIds,

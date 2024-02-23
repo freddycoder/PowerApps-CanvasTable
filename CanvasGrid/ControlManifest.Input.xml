@@ -13,7 +13,7 @@
       <property-set name="PenalityType"
         display-name-key="PenalityType_Disp"
         description-key="PenalityType_Desc"
-        of-type="SingleLine.Text"
+        of-type="OptionSet"
         usage="bound"
         required="false" />
       <property-set name="PenalityAmount"
@@ -25,16 +25,22 @@
       <property-set name="PenalityApplicable"
         display-name-key="PenalityApplicable_Disp"
         description-key="PenalityApplicable_Desc"
-        of-type="SingleLine.Text"
+        of-type="OptionSet"
         usage="bound"
         required="false" />
       <property-set name="PenalityComment"
         display-name-key="PenalityComment_Disp"
         description-key="PenalityComment_Desc"
-        of-type="SingleLine.Text"
+        of-type="Multiple"
         usage="bound"
         required="false" />
     </data-set>
+    <property name="GridHeight"
+      display-name-key="GriHeight_Disp"
+      description-key="GriHeight_Desc"
+      of-type="Whole.None"
+      usage="input"
+      required="true"/>
     <property name="FilteredRecordCount"
       display-name-key="FilteredRecordCount_Disp"
       description-key="FilteredRecordCount_Desc"

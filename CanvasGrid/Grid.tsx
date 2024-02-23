@@ -23,6 +23,7 @@ function stringFormat(template: string, ...args: string[]): string {
 export interface GridProps {
     width?: number;
     height?: number;
+    gridHeight: number | null;
     columns: ComponentFramework.PropertyHelper.DataSetApi.Column[];
     records: Record<string, ComponentFramework.PropertyHelper.DataSetApi.EntityRecord>;
     sortedRecordIds: string[];
@@ -77,6 +78,7 @@ export const Grid = React.memo((props: GridProps) => {
         columns,
         width,
         height,
+        gridHeight,
         hasNextPage,
         hasPreviousPage,
         sorting,
@@ -96,6 +98,8 @@ export const Grid = React.memo((props: GridProps) => {
         highlightValue,
         highlightColor,
     } = props;
+
+    console.log(props);
 
     const forceUpdate = useForceUpdate();
     const onSelectionChanged = React.useCallback(() => {
@@ -246,12 +250,16 @@ export const Grid = React.memo((props: GridProps) => {
             });
     }, [columns, sorting, onColumnContextMenu, onColumnClick]);
 
+    console.log('height', height);
+    console.log('gridHeight', gridHeight);
+    console.log('resource', )
+
     const rootContainerStyle: React.CSSProperties = React.useMemo(() => {
         return {
-            height: height ?? 420,
+            height: gridHeight ?? height ?? 420,
             width: width,
         };
-    }, [width, height]);
+    }, [width, gridHeight]);
 
     const onRenderRow: IDetailsListProps['onRenderRow'] = (props) => {
         const customStyles: Partial<IDetailsRowStyles> = {};
