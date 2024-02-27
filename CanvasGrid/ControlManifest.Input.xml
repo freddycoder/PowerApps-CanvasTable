@@ -2,7 +2,7 @@
 <manifest>
   <control namespace="SampleNamespace"
     constructor="CanvasGrid"
-    version="1.0.0"
+    version="2.0.0"
     display-name-key="CanvasGrid"
     description-key="CanvasGrid description"
     control-type="standard">
@@ -46,23 +46,11 @@
       description-key="FilteredRecordCount_Desc"
       of-type="Whole.None"
       usage="output"/>
-    <property name="HighlightValue"
-      display-name-key="HighlightValue_Disp"
-      description-key="HighlightValue_Desc"
-      of-type="SingleLine.Text"
-      usage="input"
-      required="true"/>
-    <property name="HighlightColor"
-      display-name-key="HighlightColor_Disp"
-      description-key="HighlightColor_Desc"
-      of-type="SingleLine.Text"
-      usage="input"
-      required="true"/>
     <resources>
       <code path="index.ts"
         order="1"/>
-      <resx path="strings/CanvasGrid.1033.resx"
-        version="1.0.0" />
+      <resx path="strings/CanvasGrid.1036.resx"
+        version="2.0.0" />
     </resources>
   </control>
 </manifest>

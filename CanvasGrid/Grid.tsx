@@ -1,7 +1,7 @@
 import { useConst, useForceUpdate } from '@fluentui/react-hooks';
 import * as React from 'react';
 import { IObjectWithKey, IRenderFunction, SelectionMode } from '@fluentui/react/lib/Utilities';
-import { ConstrainMode, DetailsList, DetailsListLayoutMode, DetailsRow, IColumn, IDetailsHeaderProps, IDetailsListProps, IDetailsRowStyles } from '@fluentui/react/lib/DetailsList';
+import { ConstrainMode, DetailsList, DetailsListLayoutMode, DetailsRow, IColumn, IDetailsCheckboxProps, IDetailsHeaderProps, IDetailsListProps, IDetailsRowStyles } from '@fluentui/react/lib/DetailsList';
 import { Sticky, StickyPositionType } from '@fluentui/react/lib/Sticky';
 import { ContextualMenu, DirectionalHint, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
 import { ScrollablePane, ScrollbarVisibility } from '@fluentui/react/lib/ScrollablePane';
@@ -10,15 +10,10 @@ import { Overlay } from '@fluentui/react/lib/Overlay';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { Selection } from '@fluentui/react/lib/Selection';
 import { Link } from '@fluentui/react/lib/Link';
+import { Text } from '@fluentui/react/lib/Text';
+import { Checkbox } from '@fluentui/react';
 
 type DataSet = ComponentFramework.PropertyHelper.DataSetApi.EntityRecord & IObjectWithKey;
-
-function stringFormat(template: string, ...args: string[]): string {
-    for (const k in args) {
-        template = template.replace('{' + k + '}', args[k]);
-    }
-    return template;
-}
 
 export interface GridProps {
     width?: number;
@@ -34,8 +29,6 @@ export interface GridProps {
     filtering: ComponentFramework.PropertyHelper.DataSetApi.FilterExpression;
     resources: ComponentFramework.Resources;
     itemsLoading: boolean;
-    highlightValue: string | null;
-    highlightColor: string | null;
     setSelectedRecords: (ids: string[]) => void;
     onNavigate: (item?: ComponentFramework.PropertyHelper.DataSetApi.EntityRecord) => void;
     onSort: (name: string, desc: boolean) => void;
@@ -52,7 +45,12 @@ const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defa
         return (
             <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced>
                 {defaultRender({
-                    ...props
+                    ...props,
+                    styles: { 
+                        root: { 
+                            padding: 0 
+                        } 
+                    },
                 })}
             </Sticky>
         );
@@ -80,7 +78,6 @@ export const Grid = React.memo((props: GridProps) => {
         height,
         gridHeight,
         hasNextPage,
-        hasPreviousPage,
         sorting,
         filtering,
         currentPage,
@@ -90,13 +87,6 @@ export const Grid = React.memo((props: GridProps) => {
         onSort,
         onFilter,
         resources,
-        loadFirstPage,
-        loadNextPage,
-        loadPreviousPage,
-        onFullScreen,
-        isFullScreen,
-        highlightValue,
-        highlightColor,
     } = props;
 
     console.log(props);
@@ -211,21 +201,6 @@ export const Grid = React.memo((props: GridProps) => {
         return sortedRecords;
     }, [records, sortedRecordIds, hasNextPage, setIsLoading]);
 
-    const onNextPage = React.useCallback(() => {
-        setIsLoading(true);
-        loadNextPage();
-    }, [loadNextPage, setIsLoading]);
-
-    const onPreviousPage = React.useCallback(() => {
-        setIsLoading(true);
-        loadPreviousPage();
-    }, [loadPreviousPage, setIsLoading]);
-
-    const onFirstPage = React.useCallback(() => {
-        setIsLoading(true);
-        loadFirstPage();
-    }, [loadFirstPage, setIsLoading]);
-
     const gridColumns = React.useMemo(() => {
         return columns
             .filter((col) => !col.isHidden && col.order >= 0)
@@ -243,7 +218,9 @@ export const Grid = React.memo((props: GridProps) => {
                     isResizable: true,
                     isFiltered: filtered != null,
                     data: col,
-                    minWidth: 200,
+                    minWidth: 50,
+                    flexGrow: col.visualSizeFactor ?? 1,
+                    targetWidthProportion: col.visualSizeFactor,
                     onColumnContextMenu: onColumnContextMenu,
                     onColumnClick: onColumnClick,
                 } as IColumn;
@@ -258,6 +235,7 @@ export const Grid = React.memo((props: GridProps) => {
         return {
             height: gridHeight ?? height ?? 420,
             width: width,
+            padding: 0
         };
     }, [width, gridHeight]);
 
@@ -267,19 +245,34 @@ export const Grid = React.memo((props: GridProps) => {
         if (props && props.item) {
             const item = props.item as DataSet | undefined;
 
-            if (highlightColor && highlightValue && item?.getValue('HighlightIndicator') == highlightValue) {
-                customStyles.root = { backgroundColor: highlightColor };
+            customStyles.root = {
+                fontSize: '14px',
+                
             }
+
             return <DetailsRow {...props} styles={customStyles} />;
         }
 
         return null;
     };
 
+    const onRenderCheckBox: IRenderFunction<IDetailsCheckboxProps> = (props, defaultRender) => {
+        const elem = defaultRender ? defaultRender(props) : null;
+
+        console.log(elem);
+
+        return elem;
+    };
+
     return (
         <Stack verticalFill grow style={rootContainerStyle}>
-            <Stack.Item grow style={{ position: 'relative', backgroundColor: 'white', textAlign: 'left' }}>
-                <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>
+            <Stack.Item grow style={{ position: 'relative', backgroundColor: 'white', textAlign: 'left', padding: 0 }}>
+                <ScrollablePane 
+                    scrollbarVisibility={ScrollbarVisibility.auto} 
+                    style={{ 
+                        padding: 0
+                    }}
+                    >
                     <DetailsList
                         columns={gridColumns}
                         onRenderItemColumn={onRenderItemColumn}
@@ -287,49 +280,28 @@ export const Grid = React.memo((props: GridProps) => {
                         items={items}
                         setKey={`set${currentPage}`} // Ensures that the selection is reset when paging
                         initialFocusedIndex={0}
-                        checkButtonAriaLabel="select row"
+                        checkButtonAriaLabel="Selectionner ligne"
                         layoutMode={DetailsListLayoutMode.fixedColumns}
                         constrainMode={ConstrainMode.unconstrained}
                         selection={selection}
                         onItemInvoked={onNavigate}
                         onRenderRow={onRenderRow}
+                        cellStyleProps={{
+                            cellLeftPadding: 0,
+                            cellRightPadding: 0,
+                            cellExtraRightPadding: 0
+                        }}
+                        onRenderCheckbox={onRenderCheckBox}
                     ></DetailsList>
                     {contextualMenuProps && <ContextualMenu {...contextualMenuProps} />}
                 </ScrollablePane>
                 {(itemsLoading || isComponentLoading) && <Overlay />}
             </Stack.Item>
-            <Stack.Item>
-                <Stack horizontal style={{ width: '100%', paddingLeft: 8, paddingRight: 8 }}>
-                    <Stack.Item grow align="center">
-                        {!isFullScreen && (
-                            <Link onClick={onFullScreen}>{resources.getString('Label_ShowFullScreen')}</Link>
-                        )}
+            <Stack.Item style={{ alignContent: 'start', textAlign: 'start' }}>
+                <Stack horizontal style={{ width: '100%', alignItems: 'start' }}>
+                    <Stack.Item grow align="start" style={{ alignItems: 'start' }}>
+                        <Text>Lignes : { items?.length ?? 0 }</Text>
                     </Stack.Item>
-                    <IconButton
-                        alt="First Page"
-                        iconProps={{ iconName: 'Rewind' }}
-                        disabled={!hasPreviousPage || isComponentLoading || itemsLoading}
-                        onClick={onFirstPage}
-                    />
-                    <IconButton
-                        alt="Previous Page"
-                        iconProps={{ iconName: 'Previous' }}
-                        disabled={!hasPreviousPage || isComponentLoading || itemsLoading}
-                        onClick={onPreviousPage}
-                    />
-                    <Stack.Item align="center">
-                        {stringFormat(
-                            resources.getString('Label_Grid_Footer'),
-                            currentPage.toString(),
-                            selection.getSelectedCount().toString(),
-                        )}
-                    </Stack.Item>
-                    <IconButton
-                        alt="Next Page"
-                        iconProps={{ iconName: 'Next' }}
-                        disabled={!hasNextPage || isComponentLoading || itemsLoading}
-                        onClick={onNextPage}
-                    />
                 </Stack>
             </Stack.Item>
         </Stack>

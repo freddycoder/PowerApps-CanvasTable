@@ -154,8 +154,6 @@ export class CanvasGrid implements ComponentFramework.StandardControl<IInputs, I
                 filtering: dataset.filtering && dataset.filtering.getFilter(),
                 resources: this.resources,
                 itemsLoading: dataset.loading,
-                highlightValue: this.context.parameters.HighlightValue.raw,
-                highlightColor: this.context.parameters.HighlightColor.raw,
                 setSelectedRecords: this.setSelectedRecords,
                 onNavigate: this.onNavigate,
                 onSort: this.onSort,
@@ -164,7 +162,7 @@ export class CanvasGrid implements ComponentFramework.StandardControl<IInputs, I
                 loadNextPage: this.loadNextPage,
                 loadPreviousPage: this.loadPreviousPage,
                 isFullScreen: this.isFullScreen,
-                onFullScreen: this.onFullScreen,
+                onFullScreen: this.onFullScreen
             })
         );
     }

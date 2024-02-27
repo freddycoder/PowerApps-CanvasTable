@@ -16,9 +16,14 @@ npm start watch
 
 ## Publier une solution zip pour importation
 
+1. Executer la commande suivante:
 ```
 pac pcf push --publisher-prefix fred
 ```
+
+2. Importer la solution généré dans sales
+
+Versioning info: https://dianabirkelbach.wordpress.com/2020/12/23/all-about-pcf-versioning/
 
 ## Manifest schema reference
 

@@ -1,6 +1,6 @@
 {
    "name": "penality-readonly-grid",
-   "version": "1.0.0",
+   "version": "2.0.0",
    "description": "Penality readonly grid for dynamics 365 CRM.",
    "scripts": {
      "build": "pcf-scripts build",

@@ -15,6 +15,7 @@
     "plugins": ["@microsoft/power-apps", "@typescript-eslint"],
     "rules": {
         "no-unused-vars": "off",
-        "no-undef": ["warn"]
+        "no-undef": ["warn"],
+        "@typescript-eslint/no-unused-vars": ["warn"]
     }
 }

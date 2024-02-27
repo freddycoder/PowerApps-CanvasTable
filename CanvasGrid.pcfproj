@@ -9,6 +9,7 @@
   
   <PropertyGroup>
     <Name>CanvasGrid</Name>
+    <Version>2.0.0</Version>
     <ProjectGuid>01f2c830-951e-462e-a8bd-9cd2708c03cf</ProjectGuid>
     <OutputPath>$(MSBuildThisFileDirectory)out\controls</OutputPath>
     <PcfBuildMode>production</PcfBuildMode>
