@@ -14,6 +14,15 @@ ou pour le développement avec rafraichissement automatique
 npm start watch
 ```
 
+## Préparer à publier
+
+1. Executer la commande suivante:
+```
+pac auth create --environment "Sales Trial"
+```
+
+Si la commande pac n'est pas trouvée, il faut l'installer le msi pour installer l'outil. Voir la document de microsoft: https://learn.microsoft.com/en-us/power-platform/developer/howto/install-cli-msi
+
 ## Publier une solution zip pour importation
 
 1. Executer la commande suivante:
